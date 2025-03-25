@@ -106,3 +106,22 @@ module "tg" {
   type        = each.value.type
   health_path = each.value.health_path
 }
+
+module "s3_for_alb_logs" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = "${var.name}-for-logs"
+
+  force_destroy = true
+
+  control_object_ownership = true
+  object_ownership         = "BucketOwnerEnforced"
+
+  attach_elb_log_delivery_policy = true
+  attach_lb_log_delivery_policy  = true
+}
+
+# module "external_alb" {
+#   source = "./modules/alb"
+
+# }

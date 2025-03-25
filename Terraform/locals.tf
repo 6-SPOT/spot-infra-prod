@@ -52,6 +52,12 @@ locals {
       id = mod.security_group_id
     }
   }
+  
+  tg_arns = {
+    for key, mod in module.tg :
+    key => mod.tg_arn
+  }
+
 }
 
 
