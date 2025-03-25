@@ -94,3 +94,15 @@ module "sg" {
   egress  = each.value.egress
 }
 
+module "tg" {
+  for_each = var.tg_config
+  source   = "./modules/tg"
+
+  name        = var.name
+  vpc_id      = module.vpc.vpc_id
+  key         = each.key
+  port        = each.value.port
+  protocol    = each.value.protocol
+  type        = each.value.type
+  health_path = each.value.health_path
+}

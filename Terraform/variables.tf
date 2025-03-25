@@ -76,3 +76,13 @@ variable "validation_method" {
   description = "SSL인증서 유효확인 방법, DNS/EMAIL 택일"
   type        = string
 }
+
+variable "tg_config" {
+  description = "타겟 그룹 구성 설정"
+  type = map(object({
+    port        = number
+    protocol    = string
+    type        = string
+    health_path = string
+  }))
+}
