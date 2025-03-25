@@ -1,5 +1,5 @@
 output "subnet_id" {
-  description = "subnet_ids"
+  description = "subnet_id"
   value       = aws_subnet.subnet.id
 }
 

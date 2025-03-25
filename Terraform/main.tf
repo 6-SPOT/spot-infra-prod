@@ -192,7 +192,22 @@ module "launch_template_create" {
   name            = var.name
   git_repo_url    = each.value.git_repo_url
   ami_id          = each.value.ami_id
-  security_groups = keys(local.sg_list)
+  security_groups = values(local.sg_list[each.key])
   key_name        = each.value.key_name
-  ec2_profile = module.ec2_role.iam_role_name
+  ec2_profile     = module.ec2_role.iam_role_name
+}
+
+module "asg" {
+  for_each = local.asg_config_merge
+  source   = "./modules/auto_scaling"
+
+  server                  = each.key
+  name                    = var.name
+  subnets                 = each.value.subnets
+  min_size                = each.value.min_size
+  max_size                = each.value.max_size
+  desired_capacity        = each.value.desired_capacity
+  launch_template_version = each.value.launch_template_version
+  launch_template_id      = each.value.launch_template_id
+  target_group_arns       = each.value.target_group_arns
 }

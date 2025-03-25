@@ -59,19 +59,28 @@ locals {
   }
 
   listener_rule_config_with_tg = {
-    for k, v in var.listener_rule_config : k => merge(
-      v,
-      {
-        actions = merge(
-          v.actions,
-          {
-            target_group_arn = lookup(local.tg_arns, k)
-          }
-        )
-      }
-    )
+    for k, v in var.listener_rule_config :
+    k => merge(v, {
+      actions = merge(v.actions, {
+        target_group_arn = lookup(local.tg_arns, k)
+      })
+    })
   }
 
+  launch_template_list = {
+    for k, mod in module.launch_template_create :
+    k => mod.arn
+  }
+
+  asg_config_merge = {
+    for k, v in var.asg_config :
+    k => merge(v, {
+      launch_template_id      = module.launch_template_create[k].id
+      launch_template_version = module.launch_template_create[k].latest_version
+      target_group_arns       = [local.tg_arns[k]]
+      subnets                 = [for _, m in module.private_sub : m.subnet_id]
+    })
+  }
 }
 
 

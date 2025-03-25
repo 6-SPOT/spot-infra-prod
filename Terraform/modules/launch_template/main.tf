@@ -1,10 +1,11 @@
 resource "aws_launch_template" "this" {
-  name_prefix          = "${var.server_type}-template"
-  image_id             = var.ami_id
-  instance_type        = var.instance_type
-  key_name             = var.key_name
-  security_group_names = var.security_groups
+  name_prefix            = "${var.server_type}-template"
+  image_id               = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  vpc_security_group_ids = var.security_groups
 
+  update_default_version = true
   iam_instance_profile {
     name = var.ec2_profile
   }

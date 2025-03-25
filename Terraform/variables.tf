@@ -153,3 +153,12 @@ variable "launch_template_config" {
     git_repo_url  = string
   }))
 }
+
+variable "asg_config" {
+  description = "오토스케일 그룹의 변수들"
+  type = map(object({
+    min_size         = number
+    max_size         = number
+    desired_capacity = number
+  }))
+}

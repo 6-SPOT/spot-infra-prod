@@ -21,3 +21,7 @@ output "sg_list" {
 output "tg_list" {
   value = local.tg_arns
 }
+
+output "asg_config" {
+  value = local.asg_config_merge
+}
