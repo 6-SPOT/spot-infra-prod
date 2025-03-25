@@ -34,3 +34,25 @@ variable "private_sub" {
     public = bool
   }))
 }
+
+variable "sg_config" {
+  description = "필요한 보안그룹에 관한 설정입니다."
+  type = map(object({
+    ingress = list(object({
+      from_port       = number
+      to_port         = number
+      protocol        = string
+      cidr_blocks     = optional(list(string))
+      security_groups = optional(list(string))
+      description     = optional(string)
+    }))
+    egress = list(object({
+      from_port       = number
+      to_port         = number
+      protocol        = string
+      cidr_blocks     = optional(list(string))
+      security_groups = optional(list(string))
+      description     = optional(string)
+    }))
+  }))
+}

@@ -42,6 +42,13 @@ locals {
       subnet_ids  = local.priavte_subnet_ids_by_az[az]
     }
   }
+  sg_list = {
+    for k, mod in module.sg :
+    k => {
+      id = mod.security_group_id
+    }
+  }
 }
+
 
 

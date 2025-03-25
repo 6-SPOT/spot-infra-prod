@@ -74,3 +74,15 @@ module "private_route" {
   is_public = false
 }
 
+module "sg" {
+  for_each = var.sg_config
+  source   = "./modules/SG"
+
+  vpc_id  = module.vpc.vpc_id
+  sg_name = each.key
+  name    = var.name
+  ingress = each.value.ingress
+  egress  = each.value.egress
+}
+
+

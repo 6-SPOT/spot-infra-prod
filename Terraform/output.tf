@@ -13,3 +13,7 @@ output "all_public_subnet_ids" {
 output "all_nat" {
   value = local.nat_info_by_az
 }
+
+output "sg_list" {
+  value = local.sg_list
+}
