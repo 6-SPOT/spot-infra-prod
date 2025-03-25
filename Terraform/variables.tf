@@ -56,3 +56,23 @@ variable "sg_config" {
     }))
   }))
 }
+
+variable "domain" {
+  description = "도메인이름"
+  type        = string
+}
+
+variable "sub_domain" {
+  description = "서브도메인이름"
+  type        = list(any)
+}
+
+variable "route53_zone_id" {
+  description = "route53의 호스팅 영역 ID입니다. route 53을 TF으로 관리하고있지않아서 직접 값을 넣어야합니다."
+  type        = string
+}
+
+variable "validation_method" {
+  description = "SSL인증서 유효확인 방법, DNS/EMAIL 택일"
+  type        = string
+}

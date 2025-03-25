@@ -4,10 +4,14 @@ locals {
     az => [for _, m in module.public_sub : m.subnet_id if m.az == az]
   }
 
+  public_alb_subnets = [for _, list in local.public_subnet_ids_by_az : list[0]]
+
   priavte_subnet_ids_by_az = {
     for az in distinct([for _, m in module.private_sub : m.az]) :
     az => [for _, m in module.private_sub : m.subnet_id if m.az == az]
   }
+
+  private_alb_subnets = [for _, list in local.priavte_subnet_ids_by_az : list[0]]
 
   nat_eip_ids_by_az = {
     for az, mod in module.nat-eip :

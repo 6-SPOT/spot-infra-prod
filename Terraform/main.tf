@@ -4,6 +4,15 @@ module "vpc" {
   name       = var.name
 }
 
+module "SSL_cert" {
+  source            = "./modules/amc"
+  domain            = var.domain
+  validation_method = var.validation_method
+  zone_id           = var.route53_zone_id
+  sub_domain        = var.sub_domain
+}
+
+
 module "public_sub" {
   for_each = var.public_sub
   source   = "./modules/subnet"
@@ -76,7 +85,7 @@ module "private_route" {
 
 module "sg" {
   for_each = var.sg_config
-  source   = "./modules/SG"
+  source   = "./modules/sg"
 
   vpc_id  = module.vpc.vpc_id
   sg_name = each.key
@@ -84,5 +93,4 @@ module "sg" {
   ingress = each.value.ingress
   egress  = each.value.egress
 }
-
 
