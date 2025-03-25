@@ -17,3 +17,7 @@ output "all_nat" {
 output "sg_list" {
   value = local.sg_list
 }
+
+output "tg_list" {
+  value = local.tg_arns
+}

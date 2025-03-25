@@ -52,10 +52,24 @@ locals {
       id = mod.security_group_id
     }
   }
-  
+
   tg_arns = {
     for key, mod in module.tg :
     key => mod.tg_arn
+  }
+
+  listener_rule_config_with_tg = {
+    for k, v in var.listener_rule_config : k => merge(
+      v,
+      {
+        actions = merge(
+          v.actions,
+          {
+            target_group_arn = lookup(local.tg_arns, k)
+          }
+        )
+      }
+    )
   }
 
 }

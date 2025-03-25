@@ -90,12 +90,46 @@ variable "tg_config" {
 variable "alb_config" {
   description = "ALB 관련 설정"
   type = map(object({
-    type            = string
-    is_internal     = bool
-    enable_https    = bool
-    enable_logging  = bool
+    type           = string
+    is_internal    = bool
+    enable_https   = bool
+    enable_logging = bool
     logging = optional(object({
       log_prefix = string
+    }))
+  }))
+}
+
+variable "listener_rule_config" {
+  description = "리스너 규칙을 정한것"
+
+  type = map(object({
+    priority = number
+
+    actions = object({
+      type             = string
+      target_group_arn = optional(string) # 단일 TG용
+
+      target_groups = optional(list(object({
+        arn    = string
+        weight = optional(number)
+      }))) # 여러 TG + 가중치
+
+      stickiness = optional(object({
+        enabled  = bool
+        duration = optional(number)
+      }))
+
+      status_code  = optional(string)
+      content_type = optional(string)
+      message_body = optional(string)
+      port         = optional(string)
+      protocol     = optional(string)
+    })
+
+    conditions = optional(object({
+      path_patterns = optional(list(string))
+      host_headers  = optional(list(string))
     }))
   }))
 }

@@ -149,3 +149,14 @@ resource "aws_route53_record" "alb" {
     evaluate_target_health = true
   }
 }
+
+module "default_listener_rule" {
+  # for_each = var.listener_rule_config
+  for_each = local.listener_rule_config_with_tg
+  source   = "./modules/alb_listener_rule"
+
+  listener_arn = module.external_alb[(keys(module.external_alb))[0]].https_listener_arn
+  priority     = each.value.priority
+  actions      = each.value.actions
+  conditions   = each.value.conditions
+}
