@@ -133,3 +133,13 @@ variable "listener_rule_config" {
     }))
   }))
 }
+
+variable "ec2_profile" {
+  description = "ec2 인스턴스 프로필 롤입니다."
+  type        = list(string)
+}
+
+variable "codedeploy_role" {
+  description = "ec2 인스턴스 프로필 롤입니다."
+  type        = list(string)
+}

@@ -160,3 +160,26 @@ module "default_listener_rule" {
   actions      = each.value.actions
   conditions   = each.value.conditions
 }
+
+module "ec2_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+
+  role_name               = "${var.name}-ec2-profile"
+  create_role             = true
+  create_instance_profile = true
+  trusted_role_services   = ["ec2.amazonaws.com"]
+
+  custom_role_policy_arns = var.ec2_profile
+
+  number_of_custom_role_policy_arns = 4
+}
+
+module "codedeploy_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+
+  trusted_role_services = ["codedeploy.amazonaws.com"]
+  role_name             = "${var.name}-codedeploy-role"
+  create_role           = true
+  custom_role_policy_arns = var.codedeploy_role
+}
+
