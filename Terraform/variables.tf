@@ -143,3 +143,13 @@ variable "codedeploy_role" {
   description = "ec2 인스턴스 프로필 롤입니다."
   type        = list(string)
 }
+
+variable "launch_template_config" {
+  description = "시작 템플릿 생성"
+  type = map(object({
+    ami_id        = string
+    instance_type = string
+    key_name      = string
+    git_repo_url  = string
+  }))
+}

@@ -177,9 +177,22 @@ module "ec2_role" {
 module "codedeploy_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
 
-  trusted_role_services = ["codedeploy.amazonaws.com"]
-  role_name             = "${var.name}-codedeploy-role"
-  create_role           = true
+  trusted_role_services   = ["codedeploy.amazonaws.com"]
+  role_name               = "${var.name}-codedeploy-role"
+  create_role             = true
   custom_role_policy_arns = var.codedeploy_role
 }
 
+module "launch_template_create" {
+  for_each = var.launch_template_config
+  source   = "./modules/launch_template"
+
+  server_type     = each.key
+  instance_type   = each.value.instance_type
+  name            = var.name
+  git_repo_url    = each.value.git_repo_url
+  ami_id          = each.value.ami_id
+  security_groups = keys(local.sg_list)
+  key_name        = each.value.key_name
+  ec2_profile = module.ec2_role.iam_role_name
+}

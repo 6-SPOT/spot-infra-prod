@@ -21,11 +21,3 @@ output "sg_list" {
 output "tg_list" {
   value = local.tg_arns
 }
-
-output "ec2_role_name" {
-  value = module.ec2_role.iam_role_name
-}
-
-output "ec2_instance_profile_name" {
-  value = module.ec2_role.iam_instance_profile_name
-}
