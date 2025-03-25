@@ -121,7 +121,31 @@ module "s3_for_alb_logs" {
   attach_lb_log_delivery_policy  = true
 }
 
-# module "external_alb" {
-#   source = "./modules/alb"
+module "external_alb" {
+  for_each = var.alb_config
+  source   = "./modules/alb"
 
-# }
+  is_internal     = each.value.is_internal
+  type            = each.value.type
+  subnets         = flatten(values(local.public_subnet_ids_by_az))
+  name            = var.name
+  security_groups = [local.sg_list["fe"].id]
+  enable_https    = each.value.enable_https
+  enable_logging  = each.value.enable_logging
+  logging         = each.value.logging
+  bucket          = module.s3_for_alb_logs.s3_bucket_id
+  certificate_arn = module.SSL_cert.certificate_arn
+}
+
+# 기존 domain에 임의로 연결
+resource "aws_route53_record" "alb" {
+  zone_id = var.route53_zone_id
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = module.external_alb[(keys(module.external_alb))[0]].alb_dns_name
+    zone_id                = module.external_alb[(keys(module.external_alb))[0]].alb_zone_id
+    evaluate_target_health = true
+  }
+}

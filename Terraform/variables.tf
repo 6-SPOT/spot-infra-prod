@@ -86,3 +86,16 @@ variable "tg_config" {
     health_path = string
   }))
 }
+
+variable "alb_config" {
+  description = "ALB 관련 설정"
+  type = map(object({
+    type            = string
+    is_internal     = bool
+    enable_https    = bool
+    enable_logging  = bool
+    logging = optional(object({
+      log_prefix = string
+    }))
+  }))
+}
