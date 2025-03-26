@@ -6,6 +6,7 @@ resource "aws_codedeploy_deployment_group" "this" {
   deployment_group_name = "${var.name}-${var.server_type}-group"
   app_name              = aws_codedeploy_app.this.name
   service_role_arn      = var.role_arn
+  autoscaling_groups    = var.asg_groups
 
   deployment_config_name = "CodeDeployDefault.AllAtOnce"
 

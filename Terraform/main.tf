@@ -202,6 +202,7 @@ module "launch_template_create" {
 }
 
 module "asg" {
+  depends_on = [ module.launch_template_create ]
   for_each = local.asg_config_merge
   source   = "./modules/auto_scaling"
 
@@ -224,4 +225,5 @@ module "codeDeploy" {
   server_type       = each.key
   role_arn          = module.codedeploy_role.iam_role_arn
   target_group_name = each.value.target_group_name
+  asg_groups        = [module.asg[each.key].asg_id]
 }

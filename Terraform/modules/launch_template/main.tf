@@ -14,6 +14,15 @@ resource "aws_launch_template" "this" {
     git_repo_url = var.git_repo_url
   }))
 
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size           = 20 
+      volume_type           = "gp3"
+      delete_on_termination = true
+    }
+  }
 
   tag_specifications {
     resource_type = "instance"

@@ -14,7 +14,7 @@ resource "aws_autoscaling_group" "this" {
   target_group_arns = var.target_group_arns
 
   health_check_type         = "ELB"
-  health_check_grace_period = 60
+  health_check_grace_period = 3000
 
   enabled_metrics = [
     "GroupMinSize",

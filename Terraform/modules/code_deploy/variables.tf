@@ -17,3 +17,8 @@ variable "target_group_name" {
   description = "배포그룹과 연결할 타깃그룹"
   type        = string
 }
+
+variable "asg_groups" {
+  description = "asg그룹"
+  type        = list(string)
+}

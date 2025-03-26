@@ -24,8 +24,12 @@ resource "aws_route_table" "this" {
 
 
 resource "aws_route_table_association" "private" {
-  for_each = toset(var.subnet_id)
+  # for_each = toset(var.subnet_id)
 
-  subnet_id      = each.value
+  # subnet_id      = each.value
+  # route_table_id = aws_route_table.this.id
+  count = length(var.subnet_id)
+
+  subnet_id      = var.subnet_id[count.index]
   route_table_id = aws_route_table.this.id
 }
