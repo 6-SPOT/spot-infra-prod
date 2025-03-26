@@ -1,14 +1,7 @@
-- name: Apply roles for Infra group
-  hosts: all
+- name: Apply roles for server group
+  hosts: localhost
   become: true
-  connection: local
-
-  vars:
-    custom_roles:
-      - common
-      - docker
-      - cloudwatch
-      - codedeploy
+  gather_facts: true
 
   tasks:
     - name: Include roles dynamically

@@ -164,7 +164,7 @@ module "default_listener_rule" {
 module "ec2_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
 
-  role_name               = "${var.name}-ec2-profile"
+  role_name               = "${var.name}-ec2-profbile"
   create_role             = true
   create_instance_profile = true
   trusted_role_services   = ["ec2.amazonaws.com"]
