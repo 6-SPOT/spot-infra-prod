@@ -1,10 +1,14 @@
 - name: Apply roles for server group
   hosts: localhost
   become: true
-  gather_facts: true
+
+  vars:
+    custom_roles:
+      - common
 
   tasks:
     - name: Include roles dynamically
       include_role:
         name: "{{ item }}"
       loop: "{{ custom_roles }}"
+
