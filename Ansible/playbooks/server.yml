@@ -1,6 +1,7 @@
 - name: Apply roles for Infra group
   hosts: all
   become: true
+  connection: local
   tasks:
     - name: Include roles dynamically
       include_role:
