@@ -57,6 +57,11 @@ locals {
     for key, mod in module.tg :
     key => mod.tg_arn
   }
+  
+  tg_names = {
+    for k, mod in module.tg :
+    k => mod.tg_name
+  }
 
   listener_rule_config_with_tg = {
     for k, v in var.listener_rule_config :
@@ -79,7 +84,14 @@ locals {
       launch_template_version = module.launch_template_create[k].latest_version
       target_group_arns       = [local.tg_arns[k]]
       subnets                 = [for _, m in module.private_sub : m.subnet_id]
-      
+
+    })
+  }
+
+  codeDeploy_config_merge = {
+    for k, v in var.codeDeploy_config :
+    k => merge(v, {
+      target_group_name = local.tg_names[k]
     })
   }
 }

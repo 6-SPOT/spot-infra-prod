@@ -168,6 +168,7 @@ module "ec2_role" {
   create_role             = true
   create_instance_profile = true
   trusted_role_services   = ["ec2.amazonaws.com"]
+  role_requires_mfa       = false
 
   custom_role_policy_arns = var.ec2_profile
 
@@ -181,6 +182,9 @@ module "codedeploy_role" {
   role_name               = "${var.name}-codedeploy-role"
   create_role             = true
   custom_role_policy_arns = var.codedeploy_role
+  role_requires_mfa       = false
+
+  number_of_custom_role_policy_arns = 1
 }
 
 module "launch_template_create" {
@@ -210,4 +214,14 @@ module "asg" {
   launch_template_version = each.value.launch_template_version
   launch_template_id      = each.value.launch_template_id
   target_group_arns       = each.value.target_group_arns
+}
+
+module "codeDeploy" {
+  for_each = local.codeDeploy_config_merge
+  source   = "./modules/code_deploy"
+
+  name              = var.name
+  server_type       = each.key
+  role_arn          = module.codedeploy_role.iam_role_arn
+  target_group_name = each.value.target_group_name
 }

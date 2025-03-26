@@ -11,6 +11,11 @@ variable "name" {
   default     = "my"
 }
 
+variable "git_repo_url" {
+  description = "사용되는 github 주소"
+  type        = string
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
@@ -160,5 +165,11 @@ variable "asg_config" {
     min_size         = number
     max_size         = number
     desired_capacity = number
+  }))
+}
+
+variable "codeDeploy_config" {
+  description = "codeDeploy 설정 변수"
+  type = map(object({
   }))
 }
