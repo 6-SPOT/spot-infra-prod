@@ -2,6 +2,14 @@
   hosts: all
   become: true
   connection: local
+
+  vars:
+  custom_roles:
+    - common
+    - docker
+    - cloudwatch
+    - codedeploy
+
   tasks:
     - name: Include roles dynamically
       include_role:
