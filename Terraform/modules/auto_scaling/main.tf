@@ -32,6 +32,13 @@ resource "aws_autoscaling_group" "this" {
     create_before_destroy = true
   }
 
+  initial_lifecycle_hook {
+    name                 = "${var.name}-${var.server}-launch-hook"
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    default_result       = "CONTINUE"
+    heartbeat_timeout    = 180
+  }
+
   tag {
     key                 = "Name"
     value               = "${var.name}-instance"

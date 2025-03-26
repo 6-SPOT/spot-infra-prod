@@ -79,6 +79,7 @@ locals {
       launch_template_version = module.launch_template_create[k].latest_version
       target_group_arns       = [local.tg_arns[k]]
       subnets                 = [for _, m in module.private_sub : m.subnet_id]
+      
     })
   }
 }
