@@ -5,6 +5,9 @@
   vars:
     custom_roles:
       - common
+      - docker
+      - codedeploy
+      - cloudwatch
 
   tasks:
     - name: Include roles dynamically
