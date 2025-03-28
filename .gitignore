@@ -1,3 +1,5 @@
 .DS_Store
 codeDeploy/*
 .vscode
+Deploy_sets/fe
+Deploy_sets/be

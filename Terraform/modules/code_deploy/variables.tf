@@ -8,7 +8,7 @@ variable "server_type" {
   type        = string
 }
 
-variable "role_arn" {
+variable "deploy_role_arn" {
   description = "codeDeploy에 적용될 role_arn"
   type        = string
 }
@@ -22,3 +22,17 @@ variable "asg_groups" {
   description = "asg그룹"
   type        = list(string)
 }
+
+#-------- 아래는 codePipeLine에서 사용하는 변수
+
+variable "s3_revision" {
+  description = "revision을 위한 s3버킷"
+  type        = string
+}
+
+variable "pipe_role_arn" {
+  description = "파이프라인 role"
+  type        = string
+}
+
+

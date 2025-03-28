@@ -145,7 +145,12 @@ variable "ec2_profile" {
 }
 
 variable "codedeploy_role" {
-  description = "ec2 인스턴스 프로필 롤입니다."
+  description = "코드 배포."
+  type        = list(string)
+}
+
+variable "codepipe_role" {
+  description = "코드 파이프라인."
   type        = list(string)
 }
 
@@ -173,3 +178,4 @@ variable "codeDeploy_config" {
   type = map(object({
   }))
 }
+

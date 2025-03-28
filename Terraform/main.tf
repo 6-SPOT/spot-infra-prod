@@ -12,7 +12,6 @@ module "SSL_cert" {
   sub_domain        = var.sub_domain
 }
 
-
 module "public_sub" {
   for_each = var.public_sub
   source   = "./modules/subnet"
@@ -187,6 +186,18 @@ module "codedeploy_role" {
   number_of_custom_role_policy_arns = 1
 }
 
+module "codepipeline_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+
+  trusted_role_services   = ["codepipeline.amazonaws.com"]
+  role_name               = "${var.name}-codepipe-role"
+  create_role             = true
+  custom_role_policy_arns = var.codepipe_role
+  role_requires_mfa       = false
+
+  number_of_custom_role_policy_arns = 4
+}
+
 module "launch_template_create" {
   for_each = var.launch_template_config
   source   = "./modules/launch_template"
@@ -202,9 +213,9 @@ module "launch_template_create" {
 }
 
 module "asg" {
-  depends_on = [ module.launch_template_create ]
-  for_each = local.asg_config_merge
-  source   = "./modules/auto_scaling"
+  depends_on = [module.launch_template_create]
+  for_each   = local.asg_config_merge
+  source     = "./modules/auto_scaling"
 
   server                  = each.key
   name                    = var.name
@@ -217,13 +228,42 @@ module "asg" {
   target_group_arns       = each.value.target_group_arns
 }
 
+module "s3_for_deploy_revision" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = "${var.name}-revision"
+
+  force_destroy = true
+
+  control_object_ownership = true
+  object_ownership         = "BucketOwnerEnforced"
+
+  attach_elb_log_delivery_policy = true
+  attach_lb_log_delivery_policy  = true
+  versioning = {
+    enabled = true
+  }
+}
+
+resource "aws_s3_object" "fe" {
+  bucket = "${module.s3_for_deploy_revision.s3_bucket_id}"
+  key    = "fe/"
+}
+
+resource "aws_s3_object" "be" {
+  bucket = "${module.s3_for_deploy_revision.s3_bucket_id}"
+  key    = "be/"
+}
+
 module "codeDeploy" {
   for_each = local.codeDeploy_config_merge
   source   = "./modules/code_deploy"
 
   name              = var.name
   server_type       = each.key
-  role_arn          = module.codedeploy_role.iam_role_arn
+  deploy_role_arn   = module.codedeploy_role.iam_role_arn
   target_group_name = each.value.target_group_name
   asg_groups        = [module.asg[each.key].asg_id]
+  s3_revision       = module.s3_for_deploy_revision.s3_bucket_id
+  pipe_role_arn     = module.codepipeline_role.iam_role_arn
 }
