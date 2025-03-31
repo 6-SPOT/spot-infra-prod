@@ -34,6 +34,28 @@
     enabled: yes
     state: restarted
 
+
+# ✅ 추가된 루트 실행 설정
+- name: Create systemd override directory for CloudWatch Agent
+  file:
+    path: /etc/systemd/system/amazon-cloudwatch-agent.service.d
+    state: directory
+    mode: '0755'
+
+- name: Override CloudWatch Agent service to run as root
+  copy:
+    dest: /etc/systemd/system/amazon-cloudwatch-agent.service.d/override.conf
+    content: |
+      [Service]
+      User=root
+
+- name: Reload systemd and restart CloudWatch Agent as root
+  shell: |
+    systemctl daemon-reexec
+    systemctl daemon-reload
+    systemctl restart amazon-cloudwatch-agent
+
+
 - name: Start CloudWatch Agent
   command: >
     /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
