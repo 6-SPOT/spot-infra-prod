@@ -15,7 +15,7 @@
 
 - name: Copy config file
   template:
-    src: ../files/cloudwatchagent.json
+    src: /this/Ansible/files/cloudwatchagent.json
     dest: /home/ubuntu/config.json
 
 - name: Move config

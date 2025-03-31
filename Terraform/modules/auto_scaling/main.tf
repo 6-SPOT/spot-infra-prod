@@ -14,7 +14,7 @@ resource "aws_autoscaling_group" "this" {
   target_group_arns = var.target_group_arns
 
   health_check_type         = "ELB"
-  health_check_grace_period = 3000
+  health_check_grace_period = 500
 
   enabled_metrics = [
     "GroupMinSize",
@@ -36,7 +36,7 @@ resource "aws_autoscaling_group" "this" {
     name                 = "${var.name}-${var.server}-launch-hook"
     lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
     default_result       = "CONTINUE"
-    heartbeat_timeout    = 180
+    heartbeat_timeout    = 500
   }
 
   tag {
