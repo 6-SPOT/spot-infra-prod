@@ -1,28 +1,44 @@
 {
         "agent": {
-                "metrics_collection_interval": 60,
-                "run_as_user": "cwagent"
+          "metrics_collection_interval": 60,
+          "run_as_user": "root"
         },
         "metrics": {
-                "aggregation_dimensions": [
-                        [
-                                "InstanceId"
-                        ]
-                ],
-                "append_dimensions": {
-                        "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
-                        "ImageId": "${aws:ImageId}",
-                        "InstanceId": "${aws:InstanceId}",
-                        "InstanceType": "${aws:InstanceType}",
-                        "Name": "${aws:Tag/Name}"
-                },
-                "metrics_collected": {
-                        "mem": {
-                                "measurement": [
-                                        "mem_used_percent"
-                                ],
-                                "metrics_collection_interval": 60
-                        }
+          "aggregation_dimensions": [
+            [
+              "InstanceId"
+            ]
+          ],
+          "append_dimensions": {
+            "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+            "ImageId": "${aws:ImageId}",
+            "InstanceId": "${aws:InstanceId}",
+            "InstanceType": "${aws:InstanceType}",
+            "Name": "${aws:Tag/Name}"
+          },
+          "metrics_collected": {
+            "mem": {
+              "measurement": [
+                "mem_used_percent"
+              ],
+              "metrics_collection_interval": 60
+            }
+          }
+        },
+        "logs": {
+          "logs_collected": {
+            "files": {
+              "collect_list": [
+                {
+                  "file_path": "/var/lib/docker/containers/*/*.log",
+                  "log_group_name": "/ec2/docker/container-logs",
+                  "log_stream_name": "{instance_id}",
+                  "timestamp_format": "%Y-%m-%dT%H:%M:%S.%f",
+                  "multi_line_start_pattern": "^{",
+                  "retention_in_days": 7
                 }
+              ]
+            }
+          }
         }
-}
+      }
