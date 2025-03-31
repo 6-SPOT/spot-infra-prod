@@ -17,15 +17,6 @@
                         "Name": "${aws:Tag/Name}"
                 },
                 "metrics_collected": {
-                        "disk": {
-                                "measurement": [
-                                        "used_percent"
-                                ],
-                                "metrics_collection_interval": 60,
-                                "resources": [
-                                        "*"
-                                ]
-                        },
                         "mem": {
                                 "measurement": [
                                         "mem_used_percent"
